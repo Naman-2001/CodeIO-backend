@@ -127,6 +127,6 @@ app.get("/", (req, res) => {
   res.send("Hello world");
 });
 
-server.listen(PORT, () => {
+server.listen(process.env.PORT || PORT, () => {
   console.log("running on port", PORT);
 });
