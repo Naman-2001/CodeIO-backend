@@ -57,39 +57,37 @@ function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-utils.setPersistence({
-  bindState: async (documentName, doc) => {
-    await delay(1000); // some random delay to signify retrieving data from db
+// utils.setPersistence({
+//   bindState: async (documentName, doc) => {
+//     await delay(1000); // some random delay to signify retrieving data from db
 
-    //documentName refers to the id of the cell in the db which the frontend will have
-    const foundCell = cells.find((cell) => cell.metadata.id === documentName);
+//     //documentName refers to the id of the cell in the db which the frontend will have
+//     const foundCell = cells.find((cell) => cell.metadata.id === documentName);
 
-    const foundSourceCode = foundCell.source.join("");
-    console.log("67", doc);
-    const yText = doc.getText("codemirror");
-    console.log("69", yText);
-    yText.insert(0, foundSourceCode);
-    const ecodedState = Y.encodeStateAsUpdate(doc);
-    doc.on("update", (update) => {
-      Y.applyUpdate(doc, update);
-    });
+//     const foundSourceCode = foundCell.source.join("");
+//     const yText = doc.getText("codemirror");
+//     yText.insert(0, foundSourceCode);
+//     const ecodedState = Y.encodeStateAsUpdate(doc);
+//     doc.on("update", (update) => {
+//       Y.applyUpdate(doc, update);
+//     });
 
-    return Y.applyUpdate(doc, ecodedState);
-    // Here you listen to granular document updates and store them in the database
-    // You don't have to do this, but it ensures that you don't lose content when the server crashes
-    // See https://github.com/yjs/yjs#Document-Updates for documentation on how to encode
-    // document updates
-  },
-  writeState: (_identifier, _doc) => {
-    // This is called when all connections to the document are closed.
-    // In the future, this method might also be called in intervals or after a certain number of updates.
-    return new Promise((resolve) => {
-      // When the returned Promise resolves, the document will be destroyed.
-      // So make sure that the document really has been written to the database.
-      resolve();
-    });
-  },
-});
+//     return Y.applyUpdate(doc, ecodedState);
+//     // Here you listen to granular document updates and store them in the database
+//     // You don't have to do this, but it ensures that you don't lose content when the server crashes
+//     // See https://github.com/yjs/yjs#Document-Updates for documentation on how to encode
+//     // document updates
+//   },
+//   writeState: (_identifier, _doc) => {
+//     // This is called when all connections to the document are closed.
+//     // In the future, this method might also be called in intervals or after a certain number of updates.
+//     return new Promise((resolve) => {
+//       // When the returned Promise resolves, the document will be destroyed.
+//       // So make sure that the document really has been written to the database.
+//       resolve();
+//     });
+//   },
+// });
 
 wss.on("connection", setupWSConnection);
 
