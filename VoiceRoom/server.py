@@ -7,18 +7,15 @@ socket.socket():
 
 class Server:
     def __init__(self):
-        self.ip = socket.gethostbyname(socket.gethostname())
-        while True:
-            try:
-                self.port = int(input('Port Number: '))
-                self.sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.sckt.bind((self.ip, self.port))
-
-                break
-            except:
-                print("Couldn't bind to that port")
+        self.ip = socket.gethostbyname(socket.gethostname())  # Get the address(IP)
+        self.port = int(input('Port Number: '))  # Port forwarding port number
+        self.sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sckt.bind((self.ip, self.port))
         self.connections = []
-        self.accept_connections()
+        try:
+            self.accept_connections()
+        except:
+            print("Could not bind")
 
     def accept_connections(self):
         self.sckt.listen()
@@ -31,20 +28,15 @@ class Server:
 
     def broadcast(self, sock, data):
         for client in self.connections:
-            if client != self.sckt and client != sock:
-                try:
-                    client.send(data)
-                except:
-                    pass
+            client.sendall(data)
 
     def handle_client(self, conn, addr):
-        while True:
-            try:
-                print("Connected by: ", addr)
+        try:
+            print("Connected by: ", addr)
+            while True:
                 data = conn.recv(1024)
                 self.broadcast(conn, data)
-
-            except socket.error:
+        except socket.error:
                 conn.close()
 
 
