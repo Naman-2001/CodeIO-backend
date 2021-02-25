@@ -7,12 +7,13 @@ const http = require("http");
 const utils = require("y-websocket/bin/utils.js");
 const setupWSConnection = utils.setupWSConnection;
 const Y = require("yjs");
+const cors = require("cors");
 const PORT = 8000;
 
 const wss = new WebSocket.Server({ noServer: true });
 
 const server = http.createServer(app);
-
+app.use(cors());
 const cells = [
   {
     metadata: {
@@ -64,8 +65,9 @@ utils.setPersistence({
     const foundCell = cells.find((cell) => cell.metadata.id === documentName);
 
     const foundSourceCode = foundCell.source.join("");
-
+    console.log("67", doc);
     const yText = doc.getText("codemirror");
+    console.log("69", yText);
     yText.insert(0, foundSourceCode);
     const ecodedState = Y.encodeStateAsUpdate(doc);
     doc.on("update", (update) => {
@@ -119,9 +121,11 @@ mongoose.Promise = global.Promise;
 
 const UserRoutes = require("./api/routes/user");
 const QuestonRoutes = require("./api/routes/question");
+const RoomRoutes = require("./api/routes/room");
 
 app.use("/user", UserRoutes);
 app.use("/question", QuestonRoutes);
+app.use("/room", RoomRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello world");

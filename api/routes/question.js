@@ -66,7 +66,7 @@ router.post("/post_question", checkAuth, async (req, res) => {
     });
 });
 
-router.get("/all_questions", (req, res) => {
+router.get("/all_questions", checkAuth, (req, res) => {
   // const createdBy = req.user.userId;
   Question.find()
     .select("language source questionTitle")
