@@ -13,7 +13,7 @@ const setupWSConnection = utils.setupWSConnection;
 const Y = require("yjs");
 const WebSocket = require("ws");
 const wss = new WebSocket.Server({ noServer: true });
-
+const sgMail = require("@sendgrid/mail");
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -125,6 +125,34 @@ router.patch("/save", async (req, res) => {
         .catch((err) => res.status(400).json({ msg: "Something went wrong" }));
     })
     .catch((err) => res.status(400).json({ msg: "Something went wrong" }));
+});
+
+router.post("/sendinvite/:id/:roomid", async (req, res) => {
+  const { id, roomid } = req.params;
+  const { fromEmail, toEmail } = req.body;
+  sgMail.setApiKey(
+    "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"
+  );
+
+  const msg = {
+    to: toEmail,
+    from: {
+      email: "rajat.development@gmail.com",
+      name: "CodeIO",
+    },
+    subject: `CODEIO Invitation from ${fromEmail}`,
+    text: ` `,
+    html: `<h1>https://naman-2001.github.io/CodeIO-IDE/${id}/${roomid}</h1>`,
+  };
+
+  await sgMail
+    .send(msg)
+    .then(async () => {
+      console.log("mail sent");
+    })
+    .catch((err) => {
+      console.log("mail not sent");
+    });
 });
 
 module.exports = router;
