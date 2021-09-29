@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const Question = require("../models/question");
+// const Question = require("../models/question");
+const Room = require("./room");
 
 const userSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
@@ -7,16 +8,18 @@ const userSchema = mongoose.Schema({
   email: { type: String },
   password: { type: String },
   token: { type: String },
-
-  companyTags: [{ type: String }],
-  topicTags: [{ type: String }],
-
-  question: [
-    {
-      type: mongoose.Schema.Types.ObjectID,
-      ref: "Question",
-    },
-  ],
+  // roomsOwned: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "Room",
+  //   },
+  // ],
+  // roomsShared: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "Room",
+  //   },
+  // ],
 });
 
 module.exports = mongoose.model("User", userSchema);

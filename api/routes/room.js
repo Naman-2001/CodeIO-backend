@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const Room = require("../models/room");
+const AllRooms = require("../models/allRooms");
 const checkAuth = require("../middleware/checkAuth");
 const { update } = require("../models/user");
 const { v4: uuidv4 } = require("uuid");
@@ -42,7 +43,7 @@ utils.setPersistence({
     console.log(foundCell);
 
     const foundSourceCode = foundCell.content;
-    const yText = doc.getText("codemirror");
+    const yText = doc.getText("monaco");
     yText.insert(0, foundSourceCode);
     const ecodedState = Y.encodeStateAsUpdate(doc);
     doc.on("update", (update) => {
@@ -75,13 +76,35 @@ router.get("/getContent/:id/:roomid", async (req, res) => {
     });
 });
 
+// router.post()
+
+router.post("/roomcreate", async (req, res) => {
+  const { roomid } = req.params;
+
+  // await AllRooms.findById({ roomid })
+  //   .then((res) => {
+  //     console.log(res);
+  //     return req.status(200).json({ msg: res });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+});
+
 router.post("/createroom", async (req, res) => {
   const { email } = req.body;
 
-  const roomid = uuidv4();
+  let roomId = "";
+  while (true) {
+    roomId = uuid();
+    const roomfound = await Room.findOne({ roomdId });
+    if (!roomfound) {
+      break;
+    }
+  }
   const room = new Room({
     _id: new mongoose.Types.ObjectId(),
-    roomId: roomid,
+    roomId,
     content: "",
     createdBy: email,
   });
