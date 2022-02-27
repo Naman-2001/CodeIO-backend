@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 // const Question = require("../models/question");
-const Room = require("./room");
+// const Room = require("./room");
 
 const userSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
